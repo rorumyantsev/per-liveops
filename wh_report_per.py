@@ -17,6 +17,11 @@ CLIENT_LIST = st.secrets["CLIENTS"]
 API_URL = st.secrets["API_URL"]
 FILE_BUFFER = io.BytesIO()
 
+def get_routing (routing_task):
+    url = "https://courier.yandex.ru/vrs/api/v1/log/response/"+routing_task
+    response = requests.get(url)
+    routes = json.loads(response.text)
+    return routes
 
 def get_claims(secret, date_from, date_to, cursor=0):
     url = API_URL
@@ -209,6 +214,9 @@ def get_cached_report(option):
     return report
 
 
+routing_task = st.text_input(label, value="Enter routing task id")
+st.write(get_routing(routing_task)
+'''
 df = get_cached_report(option)        
 delivered_today = len(df[df['status'].isin(['delivered', 'delivered_finish'])])
 
@@ -520,3 +528,4 @@ with pandas.ExcelWriter(FILE_BUFFER, engine='xlsxwriter') as writer:
     )
 
 print(f"{datetime.datetime.now()}: Finished")
+'''
