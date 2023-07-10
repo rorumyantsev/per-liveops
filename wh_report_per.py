@@ -215,7 +215,7 @@ def get_cached_report(option):
 
 
 routing_task = st.text_input("Enter routing task id")
-st.write(get_routing(routing_task))
+if routing_task is not None st.write(get_routing(routing_task))
 '''
 df = get_cached_report(option)        
 delivered_today = len(df[df['status'].isin(['delivered', 'delivered_finish'])])
