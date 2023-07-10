@@ -214,7 +214,7 @@ def get_cached_report(option):
     return report
 
 
-routing_task = st.text_input(label, value="Enter routing task id")
+routing_task = st.text_input("Enter routing task id")
 st.write(get_routing(routing_task))
 '''
 df = get_cached_report(option)        
