@@ -30,7 +30,7 @@ def check_for_lateness (row, wh_leaving_time):
             row["late"] = True
         else:
             row["late"] = False
-    elif (row["point_B_time"].astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()>row["time_arrival"]:
+    elif (datetime.datetime.strptime(row["point_B_time"], "%Y-%m-%d %H:%M:%S.%f%z").astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()>row["time_arrival"]:
         row["late"] = True
     else:
         row["late"] = False
@@ -230,12 +230,12 @@ if len(routing_task) > 0:
     st.write(end_date)
     df = get_cached_report(start_date, end_date)
     st.write(df)
-#заменить weekly на интервал вокруг даты создания routing task
+
     for route_df in routes:
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
         wh_leaving_time = route_df[~route_df["point_A_time"].isin(["Point A was never visited"])]["point_A_time"].max()
+        #проверить, что max() отрабатывает корректно
         wh_leaving_time = datetime.datetime.strptime(wh_leaving_time, "%Y-%m-%d %H:%M:%S.%f%z")
-        st.write(type(wh_leaving_time))
         route_df = route_df.apply(lambda row: check_for_lateness(row, wh_leaving_time), axis = 1)
         expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
         expander.write(route_df)
