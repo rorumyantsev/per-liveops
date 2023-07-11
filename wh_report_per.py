@@ -17,6 +17,20 @@ CLIENT_LIST = st.secrets["CLIENTS"]
 API_URL = st.secrets["API_URL"]
 FILE_BUFFER = io.BytesIO()
 
+def check_for_lateness (row, wh_leaving_time):
+    row["late"] = False
+    if row["point_B_time"] == "Point B was never visited":
+        if (datetime.datetime.now()-wh_leaving_time).total_seconds()>row["arrival_time_s"]:
+            row["late"] = True
+        else:
+            row["late"] = False
+    elif (row["point_B_time"]-wh_leaving_time).total_seconds()>row["arrival_time_s"]:
+        row["late"] = True
+    else:
+        row["late"] = False
+    return row
+        
+
 def get_routing (routing_task):
     url = "https://courier.yandex.ru/vrs/api/v1/log/response/"+routing_task
     response = requests.get(url)
@@ -168,13 +182,13 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
             try:
                 report_point_A_time = datetime.datetime.strptime(claim['route_points'][0]['visited_at']['actual'],"%Y-%m-%dT%H:%M:%S.%f%z").astimezone(
         timezone(client_timezone))
-                report_point_A_time = report_point_A_time.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+                #report_point_A_time = report_point_A_time.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
             except:
                 report_point_A_time = "Point A was never visited"
             try:
                 report_point_B_time = datetime.datetime.strptime(claim['route_points'][1]['visited_at']['actual'],"%Y-%m-%dT%H:%M:%S.%f%z").astimezone(
         timezone(client_timezone))
-                report_point_B_time = report_point_B_time.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+                #report_point_B_time = report_point_B_time.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
             except:
                 report_point_B_time = "Point B was never visited"
             row = [report_cutoff, report_created_time, report_client, report_client_id, report_barcode, report_claim_id, report_lo_code, report_status, report_status_time, 
@@ -228,10 +242,12 @@ if len(routing_task) > 0:
         result_route = []
         for route_point in route["route"]:
             #st.write(route_point)
+            if route_point["node"]["type"] == "depot":
+                planned_leave_time = route_point["departure_time_s"]
             if route_point["node"]["type"] == "location":
                 route_point_claim = route_point["node"]["value"]["description"]
-                route_point_time_arrival = route_point["arrival_time_s"]
-                route_point_time_departure = route_point["departure_time_s"]
+                route_point_time_arrival = route_point["arrival_time_s"]-planned_leave_time
+                route_point_time_departure = route_point["departure_time_s"]-planned_leave_time
                 route_point_lat = route_point["node"]["value"]["point"]["lat"]
                 route_point_lon = route_point["node"]["value"]["point"]["lon"]
                 #route_point_row = {"type": route_point_type, "claim": route_point_claim, "arrival_time": route_point_time_arrival, "depparture_time": route_point_time_departure, "lat": route_point_lat, "lon": route_point_lon}
@@ -244,8 +260,9 @@ if len(routing_task) > 0:
     st.write(df)
 #заменить weekly на интервал вокруг даты создания routing task
     for route_df in routes:
-        
+        wh_leaving_time = route_df["point_A_time"].max()
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
+        #route_df = route_df.apply(lambda row: check_for_lateness(row, wh_leaving_time))
         expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
         expander.write(route_df)
 '''
