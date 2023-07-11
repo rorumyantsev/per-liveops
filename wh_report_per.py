@@ -166,6 +166,12 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
             except:
                 report_route_id = "No route"
             try:
+                report_point_A_time = datetime.datetime.strptime(claim['route_points'][0]['visited_at']['actual'],"%Y-%m-%dT%H:%M:%S.%f%z").astimezone(
+        timezone(client_timezone))
+                report_point_A_time = report_point_A_time.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+            except:
+                report_point_A_time = "Point A was never visited"
+            try:
                 report_point_B_time = datetime.datetime.strptime(claim['route_points'][1]['visited_at']['actual'],"%Y-%m-%dT%H:%M:%S.%f%z").astimezone(
         timezone(client_timezone))
                 report_point_B_time = report_point_B_time.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
@@ -175,7 +181,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                    report_pod_point_id, report_pickup_address, report_receiver_address, report_receiver_phone, report_receiver_name, report_comment,
                    report_courier_name, report_courier_park,
                    report_return_reason, report_route_id,
-                   report_longitude, report_latitude, report_store_longitude, report_store_latitude, report_corp_id, report_point_B_time]
+                   report_longitude, report_latitude, report_store_longitude, report_store_latitude, report_corp_id, report_point_A_time, report_point_B_time]
             report.append(row)
         i = i + 1
     
@@ -185,7 +191,7 @@ def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
                                              "pod_point_id", "pickup_address", "receiver_address", "receiver_phone", "receiver_name", "client_comment", 
                                              "courier_name", "courier_park",
                                              "return_reason", "route_id", "lon", "lat", "store_lon", "store_lat",
-                                             "corp_client_id", "point_B_time"])
+                                             "corp_client_id", "point_A_time", "point_B_time"])
 #     orders_with_pod = get_pod_orders()
 #     result_frame = result_frame.apply(lambda row: check_for_pod(row, orders_with_pod), axis=1)
 #    try:
@@ -238,8 +244,9 @@ if len(routing_task) > 0:
     st.write(df)
 #заменить weekly на интервал вокруг даты создания routing task
     for route_df in routes:
+        
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
-        expander = st.expander(f"Route id {route_df['route_id'][0]} | courier {route_df['courier_name'][0]}")
+        expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
         expander.write(route_df)
 '''
 df = get_cached_report(option)        
