@@ -67,51 +67,7 @@ def get_claims(secret, date_from, date_to, cursor=0):
         return [], None
 
 
-def get_report(option="Today", start_=None, end_=None) -> pandas.DataFrame:
-    
-    offset_back = 0
-    if option == "Yesterday":
-        offset_back = 1
-    elif option == "Tomorrow":
-        offset_back = -1
-    elif option == "Received":
-        offset_back = 0
-    
-    client_timezone = "America/Lima"
-
-    if option == "Monthly":
-        start_ = "2023-06-01"
-        end_ = "2023-07-31"
-        today = datetime.datetime.now(timezone(client_timezone))
-        date_from_offset = datetime.datetime.fromisoformat(start_).astimezone(
-            timezone(client_timezone)) - datetime.timedelta(days=1)
-        date_from = date_from_offset.strftime("%Y-%m-%d")
-        date_to = end_
-    elif option == "Weekly":
-        start_date = datetime.datetime.now(timezone(client_timezone))-datetime.timedelta(days=datetime.datetime.weekday(datetime.datetime.now(timezone(client_timezone))))
-        end_date=start_date + datetime.timedelta(days=6)
-        start_ = start_date.strftime("%Y-%m-%d")
-        end_ = end_date.strftime("%Y-%m-%d")
-        #start_ = "2023-06-26"
-        #end_ = "2023-07-02"
-        today = datetime.datetime.now(timezone(client_timezone))
-        date_from_offset = datetime.datetime.fromisoformat(start_).astimezone(
-            timezone(client_timezone)) - datetime.timedelta(days=1)
-        date_from = date_from_offset.strftime("%Y-%m-%d")
-        date_to = end_
-    elif option == "Received":
-        today = datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=offset_back)
-        search_from = today.replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(days=7)
-        search_to = today.replace(hour=23, minute=59, second=59, microsecond=999999) + datetime.timedelta(days=2)
-        date_from = search_from.strftime("%Y-%m-%d")
-        date_to = search_to.strftime("%Y-%m-%d")        
-    else:
-        today = datetime.datetime.now(timezone(client_timezone)) - datetime.timedelta(days=offset_back)
-        search_from = today.replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(days=2)
-        search_to = today.replace(hour=23, minute=59, second=59, microsecond=999999)
-        date_from = search_from.strftime("%Y-%m-%d")
-        date_to = search_to.strftime("%Y-%m-%d")
-
+def get_report(start_=None, end_=None) -> pandas.DataFrame:
     today = today.strftime("%Y-%m-%d")
     report = []
     i = 0
@@ -229,8 +185,8 @@ option = st.sidebar.selectbox(
 
 
 @st.cache_data(ttl=1800.0)
-def get_cached_report(option):
-    report = get_report(option)
+def get_cached_report(start_=None, end_=None):
+    report = get_report(start_,end_)
     return report
 
 
@@ -256,7 +212,9 @@ if len(routing_task) > 0:
         result_route_df = pandas.DataFrame(result_route,
                                     columns=["claim","time_arrival","time_departure","route_point_lat","route_point_lon"])
         routes.append(result_route_df)
-    df = get_cached_report(option)
+    start_date = (datetime.datetime.fromtimestamp(routing["status"]["completed"]).astimezone(timezone(client_timezone)) - timedelta(days=5)).strftime(%Y-%m-%d)
+    end_date = (datetime.datetime.fromtimestamp(routing["status"]["completed"]).astimezone(timezone(client_timezone)) + timedelta(days=1)).strftime(%Y-%m-%d)
+    df = get_cached_report(start_date, end_date)
     st.write(df)
 #заменить weekly на интервал вокруг даты создания routing task
     for route_df in routes:
