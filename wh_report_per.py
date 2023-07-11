@@ -74,9 +74,9 @@ def get_report(start_=None, end_=None) -> pandas.DataFrame:
     report = []
     i = 0
     for secret in CLAIM_SECRETS:
-        claims, cursor = get_claims(secret, date_from, date_to)
+        claims, cursor = get_claims(secret, start_, end_)
         while cursor:
-            new_page_claims, cursor = get_claims(secret, date_from, date_to, cursor)
+            new_page_claims, cursor = get_claims(secret, start_, end_, cursor)
             claims = claims + new_page_claims
         print(f"{datetime.datetime.now()}: Processing {len(claims)} claims")
         for claim in claims:
