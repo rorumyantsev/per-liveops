@@ -239,7 +239,7 @@ if len(routing_task) > 0:
 #заменить weekly на интервал вокруг даты создания routing task
     for route_df in routes:
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
-        expander = st.expander(f"Route id {route_df['route_id'][0]}")
+        expander = st.expander(f"Route id {route_df['route_id'][0]} | courier {route_df['courier_name'][0]}")
         expander.write(route_df)
 '''
 df = get_cached_report(option)        
