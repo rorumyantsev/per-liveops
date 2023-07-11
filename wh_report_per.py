@@ -69,6 +69,7 @@ def get_claims(secret, date_from, date_to, cursor=0):
 
 
 def get_report(start_=None, end_=None) -> pandas.DataFrame:
+    today = datetime.datetime.now(timezone(client_timezone))
     today = today.strftime("%Y-%m-%d")
     report = []
     i = 0
