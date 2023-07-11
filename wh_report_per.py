@@ -222,15 +222,15 @@ if len(routing_task) > 0:
         result_route = []
         for route_point in route["route"]:
             #st.write(route_point)
-            route_point_type = route_point["node"]["type"]
-            route_point_claim = route_point["node"]["value"]["description"]
-            route_point_time_arrival = route_point["arrival_time_s"]
-            route_point_time_departure = route_point["departure_time_s"]
-            route_point_lat = route_point["node"]["value"]["point"]["lat"]
-            route_point_lon = route_point["node"]["value"]["point"]["lon"]
-            #route_point_row = {"type": route_point_type, "claim": route_point_claim, "arrival_time": route_point_time_arrival, "depparture_time": route_point_time_departure, "lat": route_point_lat, "lon": route_point_lon}
-            route_point_row = [route_point_type, route_point_claim, route_point_time_arrival, route_point_time_departure, route_point_lat, route_point_lon]
-            result_route.append(route_point_row)
+            if route_point["node"]["type"] == "location":
+                route_point_claim = route_point["node"]["value"]["description"]
+                route_point_time_arrival = route_point["arrival_time_s"]
+                route_point_time_departure = route_point["departure_time_s"]
+                route_point_lat = route_point["node"]["value"]["point"]["lat"]
+                route_point_lon = route_point["node"]["value"]["point"]["lon"]
+                #route_point_row = {"type": route_point_type, "claim": route_point_claim, "arrival_time": route_point_time_arrival, "depparture_time": route_point_time_departure, "lat": route_point_lat, "lon": route_point_lon}
+                route_point_row = [route_point_type, route_point_claim, route_point_time_arrival, route_point_time_departure, route_point_lat, route_point_lon]
+                result_route.append(route_point_row)
         result_route_df = pandas.DataFrame(result_route,
                                     columns=["type","claim","time_arrival","time_departure","route_point_lat","route_point_lon"])
         routes.append(result_route_df)
