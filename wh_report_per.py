@@ -234,7 +234,7 @@ if len(routing_task) > 0:
         result_route_df = pandas.DataFrame(result_route,
                                     columns=["type","claim","time_arrival","time_departure","route_point_lat","route_point_lon"])
         routes.append(result_route_df)
-    df = get_catched_report("Weekly")
+    df = get_catched_report(option)
     #заменить weekly на интервал вокруг даты создания routing task
     for route_df in routes:
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
