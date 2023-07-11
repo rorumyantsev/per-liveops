@@ -227,7 +227,7 @@ if len(routing_task) > 0:
     st.write(df)
 #заменить weekly на интервал вокруг даты создания routing task
     for route_df in routes:
-        wh_leaving_time = route_df["point_A_time"].max()
+        wh_leaving_time = route_df["point_A_time"][~route_df["point_A_time"].isin(["Point A was never visited"])].max()
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
         #route_df = route_df.apply(lambda row: check_for_lateness(row, wh_leaving_time))
         expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
