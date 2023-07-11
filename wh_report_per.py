@@ -212,6 +212,8 @@ if len(routing_task) > 0:
         result_route_df = pandas.DataFrame(result_route,
                                     columns=["claim","time_arrival","time_departure","route_point_lat","route_point_lon"])
         routes.append(result_route_df)
+    st.write(routing["status"]["completed"])
+    st.write(datetime.datetime.fromtimestamp(routing["status"]["completed"]))
     start_date = (datetime.datetime.fromtimestamp(routing["status"]["completed"]).astimezone(timezone(client_timezone)) - timedelta(days=5)).strftime("%Y-%m-%d")
     end_date = (datetime.datetime.fromtimestamp(routing["status"]["completed"]).astimezone(timezone(client_timezone)) + timedelta(days=1)).strftime("%Y-%m-%d")
     df = get_cached_report(start_date, end_date)
