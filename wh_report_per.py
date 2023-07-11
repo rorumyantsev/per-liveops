@@ -19,11 +19,11 @@ FILE_BUFFER = io.BytesIO()
 client_timezone = "America/Lima"
 
 def check_for_lateness (row, wh_leaving_time):
-    st.write(row["point_B_time"])
-    st.write(wh_leaving_time)
-    st.write(datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone)))
-    st.write((datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time).total_seconds())
-    st.write(row["time_arrival"])
+    #st.write(row["point_B_time"])
+    #st.write(wh_leaving_time)
+    #st.write(datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone)))
+    #st.write((datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time).total_seconds())
+    #st.write(row["time_arrival"])
     row["late"] = False
     if row["point_B_time"] == "Point B was never visited":
         if (datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()>row["time_arrival"]:
@@ -233,7 +233,7 @@ if len(routing_task) > 0:
 #заменить weekly на интервал вокруг даты создания routing task
     for route_df in routes:
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
-        wh_leaving_time = route_df[~route_df["point_A_time"].isin(["Point A was never visited"])]["point_A_time"].max()
+        wh_leaving_time = route_df[~route_df["point_A_time"].isin(["Point A was never visited"])]["point_A_time"].max().astimezone(timezone(client_timezone))
         route_df = route_df.apply(lambda row: check_for_lateness(row, wh_leaving_time), axis = 1)
         expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
         expander.write(route_df)
