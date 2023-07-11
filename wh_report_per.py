@@ -221,6 +221,8 @@ if len(routing_task) > 0:
     #st.write((datetime.datetime.fromtimestamp(routing["status"]["completed"]).astimezone(timezone(client_timezone)) - datetime.timedelta(days=5)).strftime("%Y-%m-%d"))
     start_date = (datetime.datetime.fromtimestamp(routing["status"]["completed"]).astimezone(timezone(client_timezone)) - datetime.timedelta(days=5)).strftime("%Y-%m-%d")
     end_date = (datetime.datetime.fromtimestamp(routing["status"]["completed"]).astimezone(timezone(client_timezone)) + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+    st.write(start_date)
+    st.write(end_date)
     df = get_cached_report(start_date, end_date)
     st.write(df)
 #заменить weekly на интервал вокруг даты создания routing task
