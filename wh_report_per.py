@@ -19,11 +19,11 @@ FILE_BUFFER = io.BytesIO()
 client_timezone = "America/Lima"
 
 def check_for_lateness (row, wh_leaving_time):
-    #st.write(row["point_B_time"])
-    #st.write(wh_leaving_time)
-    #st.write(datetime.datetime.now()-wh_leaving_time)
-    #st.write((datetime.datetime.now()-wh_leaving_time).total_seconds())
-    #st.write(row["arrival_time"])
+    st.write(row["point_B_time"])
+    st.write(wh_leaving_time)
+    st.write(datetime.datetime.now()-wh_leaving_time)
+    st.write((datetime.datetime.now()-wh_leaving_time).total_seconds())
+    st.write(row["time_arrival"])
     row["late"] = False
     if row["point_B_time"] == "Point B was never visited":
         if (datetime.datetime.now()-wh_leaving_time).total_seconds()>row["time_arrival"]:
