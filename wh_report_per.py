@@ -26,11 +26,11 @@ def check_for_lateness (row, wh_leaving_time):
     #st.write(row["time_arrival"])
     row["late"] = False
     if row["point_B_time"] == "Point B was never visited":
-        if (datetime.datetime.now()-wh_leaving_time).total_seconds()>row["time_arrival"]:
+        if (datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()>row["time_arrival"]:
             row["late"] = True
         else:
             row["late"] = False
-    elif (row["point_B_time"]-wh_leaving_time).total_seconds()>row["time_arrival"]:
+    elif (row["point_B_time"].astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()>row["time_arrival"]:
         row["late"] = True
     else:
         row["late"] = False
