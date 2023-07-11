@@ -229,10 +229,10 @@ if len(routing_task) > 0:
                 route_point_lat = route_point["node"]["value"]["point"]["lat"]
                 route_point_lon = route_point["node"]["value"]["point"]["lon"]
                 #route_point_row = {"type": route_point_type, "claim": route_point_claim, "arrival_time": route_point_time_arrival, "depparture_time": route_point_time_departure, "lat": route_point_lat, "lon": route_point_lon}
-                route_point_row = [route_point_type, route_point_claim, route_point_time_arrival, route_point_time_departure, route_point_lat, route_point_lon]
+                route_point_row = [route_point_claim, route_point_time_arrival, route_point_time_departure, route_point_lat, route_point_lon]
                 result_route.append(route_point_row)
         result_route_df = pandas.DataFrame(result_route,
-                                    columns=["type","claim","time_arrival","time_departure","route_point_lat","route_point_lon"])
+                                    columns=["claim","time_arrival","time_departure","route_point_lat","route_point_lon"])
         routes.append(result_route_df)
     df = get_cached_report(option)
     st.write(df)
