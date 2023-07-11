@@ -19,7 +19,7 @@ FILE_BUFFER = io.BytesIO()
 client_timezone = "America/Lima"
 
 def check_for_lateness (row, wh_leaving_time):
-    st.write(row["point_B_time"])
+    st.write(type(row["point_B_time"]))
     st.write(type(wh_leaving_time))
     st.write(datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time)
     st.write((datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time).total_seconds())
@@ -234,7 +234,6 @@ if len(routing_task) > 0:
     for route_df in routes:
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
         wh_leaving_time = route_df[~route_df["point_A_time"].isin(["Point A was never visited"])]["point_A_time"].max()
-        st.write(type(wh_leaving_time))
         route_df = route_df.apply(lambda row: check_for_lateness(row, wh_leaving_time), axis = 1)
         expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
         expander.write(route_df)
