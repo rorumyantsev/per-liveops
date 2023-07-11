@@ -235,8 +235,8 @@ if len(routing_task) > 0:
                                     columns=["type","claim","time_arrival","time_departure","route_point_lat","route_point_lon"])
         routes.append(result_route_df)
     df = get_cached_report(option)
-    st.wtite(df)
-    #заменить weekly на интервал вокруг даты создания routing task
+    st.write(df)
+#заменить weekly на интервал вокруг даты создания routing task
     for route_df in routes:
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
         expander = st.expander("Route i")
