@@ -216,7 +216,18 @@ def get_cached_report(option):
 
 routing_task = st.text_input("Enter routing task id")
 if len(routing_task) > 0:
-    st.write(get_routing(routing_task))
+    routing = get_routing(routing_task)
+    for route in routing["result"]["routes"]:
+        for route_point in route:
+            route_point_claim = route_point["node"]["id"]
+            route_point_time_arrival = route_point["arrival_time_s"]
+            route_point_time_departure = route_point["departure_time_s"]
+            route_point_lat = route_point["node"]["point"]["lat"]
+            route_point_lon = route_point["node"]["point"]["lon"]
+            route_point_row = ['claim': route_point_claim, 'arrival_time': route_point_time_arrival, 'depparture_time': route_point_time_departure, 'lat': route_point_lat, 'lon': route_point_lon]
+            result_route.append(route_point_row)
+        routes.append(result_route)
+    st.write(routes)
 '''
 df = get_cached_report(option)        
 delivered_today = len(df[df['status'].isin(['delivered', 'delivered_finish'])])
