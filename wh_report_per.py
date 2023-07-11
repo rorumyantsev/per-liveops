@@ -16,7 +16,7 @@ CLIENT_LIST = st.secrets["CLIENTS"]
 #SHEET_ID = st.secrets["SHEET_ID"]
 API_URL = st.secrets["API_URL"]
 FILE_BUFFER = io.BytesIO()
-client_timezone = "America/Lime"
+client_timezone = "America/Lima"
 
 def check_for_lateness (row, wh_leaving_time):
     row["late"] = False
