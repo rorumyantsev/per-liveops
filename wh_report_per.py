@@ -217,11 +217,10 @@ def get_cached_report(option):
 routing_task = st.text_input("Enter routing task id")
 if len(routing_task) > 0:
     routing = get_routing(routing_task)
-    
+    routes = []
     for route in routing["result"]["routes"]:
-        routes = []
+        result_route = []
         for route_point in route["route"]:
-            result_route = []
             #st.write(route_point)
             route_point_claim = route_point["node"]["value"]["id"]
             route_point_time_arrival = route_point["arrival_time_s"]
