@@ -261,7 +261,7 @@ if len(routing_task) > 0:
             path = [[beginning_point],[route_df["lon"][i],route_df["lat"][i]]]
             beginning_point = [route_df["lon"][i],route_df["lat"][i]]
             name = ""
-            if i = 0:
+            if i == 0:
                 if route_df["late"][i]:
                     color = [255, 0, 0]
                 else:
