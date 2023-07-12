@@ -273,7 +273,7 @@ if len(routing_task) > 0:
                 pdk.Layer(
                    'PathLayer',
                    data=chart_data,
-                   get_position='[lat, lon]',
+                   get_position='[lon, lat]',
                    pickable=True,
                    get_color="color",
                    width_scale=20,
