@@ -261,6 +261,7 @@ if len(routing_task) > 0:
             path.append([route_df["lat"][i],route_df["lon"][i]])
             i=i+1
         chart_data = [{"path": path, "name": f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}","color":[255, 0, 0]}]
+        st.write(chart_data)
         expander.pydeck_chart(pdk.Deck(
             map_style=None,
             initial_view_state=pdk.ViewState(
