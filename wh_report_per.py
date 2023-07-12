@@ -253,12 +253,12 @@ if len(routing_task) > 0:
         route_df = route_df.apply(lambda row: check_for_lateness(row, wh_leaving_time), axis = 1)
         expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
         expander.write(route_df)
-        beginning_point = [wh_lat,wh_lon]
+        beginning_point = [wh_lon,wh_lat]
         i=0
         path = []
         path.append(beginning_point)
         for point in route_df["lat"]:
-            path.append([route_df["lat"][i],route_df["lon"][i]])
+            path.append([route_df["lon"][i],route_df["lat"][i]])
             i=i+1
         chart_data = [{"path": path, "name": f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}","color":[255, 0, 0]}]
         st.write(chart_data)
