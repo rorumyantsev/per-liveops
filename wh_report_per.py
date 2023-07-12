@@ -7,6 +7,7 @@ import io
 import streamlit as st
 import pydeck as pdk
 import dateutil.parser
+import pydeck as pdk
 
 st.set_page_config(layout="wide")
 
@@ -208,6 +209,8 @@ routing_task = st.text_input("Enter routing task id")
 if len(routing_task) > 0:
     routing = get_routing(routing_task)
     routes = []
+    wh_lat = routing["result"]["routes"][0]["route"][0]["node"]["value"]["point"]["lat"]
+    wh_lon = routing["result"]["routes"][0]["route"][0]["node"]["value"]["point"]["lon"]
     for route in routing["result"]["routes"]:
         result_route = []
         for route_point in route["route"]:
@@ -250,6 +253,38 @@ if len(routing_task) > 0:
         route_df = route_df.apply(lambda row: check_for_lateness(row, wh_leaving_time), axis = 1)
         expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
         expander.write(route_df)
+        beginning_point = [wh_lat,wh_lon]
+        i=0
+        path = []
+        path.append(beginning_point)
+        for point in route_df["lat"]:
+            path.append([route_df["lat"][i],route_df["lon"][i]])
+            i=i+1
+        chart_data = [{"path": path, "name": f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}","color":[255, 0, 0]}]
+        expander.pydeck_chart(pdk.Deck(
+            map_style=None,
+            initial_view_state=pdk.ViewState(
+                latitude=route_df["lat"].mean(),
+                longitude=route_df["lon"].mean(),
+                zoom=11,
+            ),
+            layers=[
+                pdk.Layer(
+                   'PathLayer',
+                   data=chart_data,
+                   get_position='[lat, lon]',
+                   pickable=True,
+                   get_color="color",
+                   width_scale=20,
+                   width_min_pixels=2,
+                   get_path="path",
+                   get_width=5,
+                ),
+            ],
+        ))
+
+
+
 '''
 df = get_cached_report(option)        
 delivered_today = len(df[df['status'].isin(['delivered', 'delivered_finish'])])
