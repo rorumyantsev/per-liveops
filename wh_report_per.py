@@ -31,12 +31,16 @@ def check_for_lateness (row, wh_leaving_time):
     if row["point_B_time"] == datetime.datetime.fromtimestamp(0).astimezone(timezone(client_timezone)):
         if (datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()>(row["time_arrival"]+3600):
             row["late"] = True
+            row["lateness"] = str(datetime.timedelta(sec=((datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()-row["time_arrival"])))
         else:
             row["late"] = False
+            rouw["lateness"] = 0
     elif (row["point_B_time"].astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()>(row["time_arrival"]+3600):
         row["late"] = True
+        row["lateness"] = str(datetime.timedelta(sec=(row["point_B_time"].astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()-row["time_arrival"])))
     else:
         row["late"] = False
+        row["lateness"] = 0
     return row
         
 
