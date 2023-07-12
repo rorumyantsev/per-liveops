@@ -283,7 +283,7 @@ if len(routing_task) > 0:
             segment = {"path": path, "name": name,"color": color}
             chart_data.append(segment)
             i=i+1
-        #chart_data = [{"path": path, "name": f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}","color":[255, 0, 0]}]
+        #chart_data = [{"path": path, "name": f"Route id {route_df['route_id'][0]} | <br />{route_df['courier_name'][0]}","color":[255, 0, 0]}]
         #st.write(chart_data)
         expander.pydeck_chart(pdk.Deck(
             map_style=None,
