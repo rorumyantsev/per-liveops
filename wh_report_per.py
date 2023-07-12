@@ -255,12 +255,28 @@ if len(routing_task) > 0:
         expander.write(route_df)
         beginning_point = [wh_lon,wh_lat]
         i=0
-        path = []
-        path.append(beginning_point)
+        chart_data = []
+        #path.append(beginning_point)
         for point in route_df["lat"]:
-            path.append([route_df["lon"][i],route_df["lat"][i]])
+            path = [[beginning_point],[route_df["lon"][i],route_df["lat"][i]]]
+            beginning_point = [route_df["lon"][i],route_df["lat"][i]]
+            name = ""
+            if i = 0:
+                if route_df["late"][i]:
+                    color = [255, 0, 0]
+                else:
+                    color = [0, 255, 0]
+            else:
+                if route_df["late"][i] and route_df["late"][i-1]:
+                    color = [255,0,0]
+                elif route_df["late"][i] or route_df["late"][i-1]:
+                    color = [255,255,0]
+                else:
+                    color = [0,255,0]
+            segment = {"path": path, "name": name,"color": color}
+            chart_data.append(segment)
             i=i+1
-        chart_data = [{"path": path, "name": f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}","color":[255, 0, 0]}]
+        #chart_data = [{"path": path, "name": f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}","color":[255, 0, 0]}]
         st.write(chart_data)
         expander.pydeck_chart(pdk.Deck(
             map_style=None,
