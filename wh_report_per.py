@@ -252,7 +252,6 @@ if len(routing_task) > 0:
         #    st.write(wh_leaving_time)
         route_df = route_df.apply(lambda row: check_for_lateness(row, wh_leaving_time), axis = 1)
         expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
-        expander.write(route_df)
         beginning_point = [wh_lon,wh_lat]
         i=0
         chart_data = []
@@ -278,7 +277,7 @@ if len(routing_task) > 0:
             chart_data.append(segment)
             i=i+1
         #chart_data = [{"path": path, "name": f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}","color":[255, 0, 0]}]
-        st.write(chart_data)
+        #st.write(chart_data)
         expander.pydeck_chart(pdk.Deck(
             map_style=None,
             initial_view_state=pdk.ViewState(
@@ -300,6 +299,7 @@ if len(routing_task) > 0:
                 ),
             ],
         ))
+        expander.write(route_df)
 
 
 
