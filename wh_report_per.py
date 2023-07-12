@@ -258,7 +258,7 @@ if len(routing_task) > 0:
         chart_data = []
         #path.append(beginning_point)
         for point in route_df["lat"]:
-            path = [[beginning_point],[route_df["lon"][i],route_df["lat"][i]]]
+            path = [beginning_point,[route_df["lon"][i],route_df["lat"][i]]]
             beginning_point = [route_df["lon"][i],route_df["lat"][i]]
             name = ""
             if i == 0:
