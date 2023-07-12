@@ -262,14 +262,14 @@ if len(routing_task) > 0:
             beginning_point = [route_df["lon"][i],route_df["lat"][i]]
             name = "test"
             if i == 0:
-                if route_df["late"][i]:
+                if route_df["late"][i] == True:
                     color = [255, 0, 0]
                 else:
                     color = [0, 255, 0]
             else:
-                if route_df["late"][i] and route_df["late"][i-1]:
+                if route_df["late"][i] == True and route_df["late"][i-1] == True:
                     color = [255,0,0]
-                elif route_df["late"][i] or route_df["late"][i-1]:
+                elif route_df["late"][i] == True or route_df["late"][i-1] == True:
                     color = [255,255,0]
                 else:
                     color = [0,255,0]
