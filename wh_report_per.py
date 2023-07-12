@@ -264,7 +264,6 @@ if len(routing_task) > 0:
                 if route_df["late"][i] == True:
                     color = [255, 0, 0]
                 else:
-                    st.write(route_df["late"][i])
                     color = [0, 255, 0]
             else:
                 if route_df["late"][i] == True and route_df["late"][i-1] == True:
