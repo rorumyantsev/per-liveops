@@ -147,13 +147,13 @@ def get_report(start_=None, end_=None) -> pandas.DataFrame:
         timezone(client_timezone))
                 #report_point_A_time = report_point_A_time.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
             except:
-                report_point_A_time = "Point A was never visited"
+                report_point_A_time = datetime.datetime.fromtimestamp(0).astimezone(timezone(client_timezone))
             try:
                 report_point_B_time = datetime.datetime.strptime(claim['route_points'][1]['visited_at']['actual'],"%Y-%m-%dT%H:%M:%S.%f%z").astimezone(
         timezone(client_timezone))
                 #report_point_B_time = report_point_B_time.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
             except:
-                report_point_B_time = "Point B was never visited"
+                report_point_B_time = datetime.datetime.fromtimestamp(0).astimezone(timezone(client_timezone))
             row = [report_cutoff, report_created_time, report_client, report_client_id, report_barcode, report_claim_id, report_lo_code, report_status, report_status_time, 
                    report_pod_point_id, report_pickup_address, report_receiver_address, report_receiver_phone, report_receiver_name, report_comment,
                    report_courier_name, report_courier_park,
@@ -235,11 +235,11 @@ if len(routing_task) > 0:
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
         wh_leaving_time = route_df[~route_df["point_A_time"].isin(["Point A was never visited"])]["point_A_time"].max()
         #проверить, что max() отрабатывает корректно
-        try:
-            wh_leaving_time = datetime.datetime.strptime(wh_leaving_time, "%Y-%m-%d %H:%M:%S.%f%z")
-        except Exception as Error:
-            st.write(Error)
-            st.write(wh_leaving_time)
+        #try:
+        #    wh_leaving_time = datetime.datetime.strptime(wh_leaving_time, "%Y-%m-%d %H:%M:%S.%f%z")
+        #except Exception as Error:
+        #    st.write(Error)
+        #    st.write(wh_leaving_time)
         route_df = route_df.apply(lambda row: check_for_lateness(row, wh_leaving_time), axis = 1)
         expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
         expander.write(route_df)
