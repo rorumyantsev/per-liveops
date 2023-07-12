@@ -34,13 +34,13 @@ def check_for_lateness (row, wh_leaving_time):
             row["lateness"] = str(datetime.timedelta(seconds=((datetime.datetime.now().astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()-row["time_arrival"])))
         else:
             row["late"] = False
-            rouw["lateness"] = 0
+            rouw["lateness"] = "less then hour"
     elif (row["point_B_time"].astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()>(row["time_arrival"]+3600):
         row["late"] = True
         row["lateness"] = str(datetime.timedelta(seconds=((row["point_B_time"].astimezone(timezone(client_timezone))-wh_leaving_time.astimezone(timezone(client_timezone))).total_seconds()-row["time_arrival"])))
     else:
         row["late"] = False
-        row["lateness"] = 0
+        row["lateness"] = "less then hour"
     return row
         
 
