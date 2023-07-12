@@ -236,10 +236,10 @@ if len(routing_task) > 0:
     #st.write((datetime.datetime.fromtimestamp(routing["status"]["completed"]).astimezone(timezone(client_timezone)) - datetime.timedelta(days=5)).strftime("%Y-%m-%d"))
     start_date = (datetime.datetime.fromtimestamp(routing["status"]["completed"]).astimezone(timezone(client_timezone)) - datetime.timedelta(days=5)).strftime("%Y-%m-%d")
     end_date = (datetime.datetime.fromtimestamp(routing["status"]["completed"]).astimezone(timezone(client_timezone)) + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
-    st.write(start_date)
-    st.write(end_date)
+    #st.write(start_date)
+    #st.write(end_date)
     df = get_cached_report(start_date, end_date)
-    st.write(df)
+    #st.write(df)
 
     for route_df in routes:
         route_df = route_df.join(df.set_index("claim_id"),on = "claim",how = "left")
@@ -265,6 +265,7 @@ if len(routing_task) > 0:
                 if route_df["late"][i] == True:
                     color = [255, 0, 0]
                 else:
+                    st.write(route_df["late"][i])
                     color = [0, 255, 0]
             else:
                 if route_df["late"][i] == True and route_df["late"][i-1] == True:
