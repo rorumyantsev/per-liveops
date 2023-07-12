@@ -258,6 +258,8 @@ if len(routing_task) > 0:
                 max_point_b_visit_time = point_b_visit_time
                 route_lateness = route_df["lateness"][i]
             i=i+1
+        st.write(len(route_df[route_df["status"].isin(["delivered","delivered_finish"])]))
+        st.write(len(route_df))
         route_CR = round(len(route_df[route_df["status"].isin(["delivered","delivered_finish"])])/len(route_df)*100)
         expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]} | CR {route_CR}% | lateness {route_lateness}")
         beginning_point = [wh_lon,wh_lat]
