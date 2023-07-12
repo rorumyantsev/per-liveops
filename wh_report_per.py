@@ -251,7 +251,15 @@ if len(routing_task) > 0:
         #    st.write(Error)
         #    st.write(wh_leaving_time)
         route_df = route_df.apply(lambda row: check_for_lateness(row, wh_leaving_time), axis = 1)
-        expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]}")
+        i=0
+        max_point_b_visit_time = datetime.datetime.fromtimestamp(0).astimezone(timezone(client_timezone))
+        for point_b_visit_time in route_df["point_B_time"]:
+            if point_b_visit_time > max_point_b_visit_time:
+                max_point_b_visit_time = point_b_visit_time
+                route_lateness = route_df["lateness"][i]
+            i=i+1
+        route_CR = len(route_df[route_df["status"].isin(["delivered","delivered_finish"])])/len(route_df)
+        expander = st.expander(f"Route id {route_df['route_id'][0]} | {route_df['courier_name'][0]} | CR {route_CR} | lateness {route_lateness}")
         beginning_point = [wh_lon,wh_lat]
         i=0
         chart_data = []
